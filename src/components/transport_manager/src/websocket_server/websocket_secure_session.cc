@@ -42,9 +42,10 @@ WebSocketSecureSession<ExecutorType>::WebSocketSecureSession(
     tcp::socket socket,
     ssl::context& ctx,
     DataReceiveCallback data_receive,
+    DataReceiveCallback on_data_sent,
     OnIOErrorCallback on_error)
     : WebSocketSession<ExecutorType>(
-          std::move(socket), ctx, data_receive, on_error) {}
+          std::move(socket), ctx, data_receive, on_data_sent, on_error) {}
 
 template <typename ExecutorType>
 void WebSocketSecureSession<ExecutorType>::AsyncAccept() {

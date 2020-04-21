@@ -79,6 +79,7 @@ class WebSocketConnection
       protocol_handler::RawMessagePtr message) OVERRIDE;
 
   void DataReceive(protocol_handler::RawMessagePtr frame);
+  void OnDataSent(protocol_handler::RawMessagePtr frame);
   void Run();
   bool IsShuttingDown();
 

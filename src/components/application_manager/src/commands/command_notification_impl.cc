@@ -63,7 +63,7 @@ bool CommandNotificationImpl::CleanUp() {
 
 void CommandNotificationImpl::Run() {}
 
-void CommandNotificationImpl::SendNotification() {
+void CommandNotificationImpl::SendNotification(const bool final_message) {
   (*message_)[strings::params][strings::protocol_type] = mobile_protocol_type_;
   (*message_)[strings::params][strings::protocol_version] = protocol_version_;
   (*message_)[strings::params][strings::message_type] =
@@ -72,7 +72,7 @@ void CommandNotificationImpl::SendNotification() {
   LOG4CXX_INFO(logger_, "SendNotification");
   MessageHelper::PrintSmartObject(*message_);
 
-  rpc_service_.SendMessageToMobile(message_);
+  rpc_service_.SendMessageToMobile(message_, final_message);
 }
 
 }  // namespace commands

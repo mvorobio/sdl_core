@@ -41,11 +41,13 @@ template <>
 WebSocketSession<tcp::socket&>::WebSocketSession(
     boost::asio::ip::tcp::socket socket,
     DataReceiveCallback data_receive,
+    DataReceiveCallback on_data_sent,
     OnIOErrorCallback on_error)
     : socket_(std::move(socket))
     , ws_(socket_)
     , strand_(ws_.get_executor())
     , data_receive_(data_receive)
+    , on_data_sent_(on_data_sent)
     , on_io_error_(on_error) {
   ws_.binary(true);
 }
@@ -56,11 +58,13 @@ WebSocketSession<ssl::stream<tcp::socket&> >::WebSocketSession(
     boost::asio::ip::tcp::socket socket,
     ssl::context& ctx,
     DataReceiveCallback data_receive,
+    DataReceiveCallback on_data_sent,
     OnIOErrorCallback on_error)
     : socket_(std::move(socket))
     , ws_(socket_, ctx)
     , strand_(ws_.get_executor())
     , data_receive_(data_receive)
+    , on_data_sent_(on_data_sent)
     , on_io_error_(on_error) {
   ws_.binary(true);
 }
@@ -107,6 +111,8 @@ TransportAdapter::Error WebSocketSession<ExecutorType>::WriteDown(
     LOG4CXX_ERROR(ws_logger_, "A system error has occurred: " << ec.message());
     return TransportAdapter::FAIL;
   }
+
+  on_data_sent_(message);
 
   return TransportAdapter::OK;
 }

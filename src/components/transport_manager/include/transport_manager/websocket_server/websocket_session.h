@@ -69,12 +69,14 @@ class WebSocketSession
  public:
   WebSocketSession(boost::asio::ip::tcp::socket socket,
                    DataReceiveCallback data_receive,
+                   DataReceiveCallback on_data_sent,
                    OnIOErrorCallback on_error);
 
 #ifdef ENABLE_SECURITY
   WebSocketSession(boost::asio::ip::tcp::socket socket,
                    ssl::context& ctx,
                    DataReceiveCallback data_receive,
+                   DataReceiveCallback on_data_sent,
                    OnIOErrorCallback on_error);
 #endif  // ENABLE_SECURITY
 
@@ -98,6 +100,7 @@ class WebSocketSession
   boost::asio::strand<boost::asio::io_context::executor_type> strand_;
   boost::beast::flat_buffer buffer_;
   DataReceiveCallback data_receive_;
+  DataReceiveCallback on_data_sent_;
   OnIOErrorCallback on_io_error_;
 };
 

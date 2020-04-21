@@ -51,6 +51,7 @@ WebSocketConnection<WebSocketSession<> >::WebSocketConnection(
           std::move(socket),
           std::bind(
               &WebSocketConnection::DataReceive, this, std::placeholders::_1),
+          [this](protocol_handler::RawMessagePtr frame) { OnDataSent(frame); },
           std::bind(&WebSocketConnection::OnError, this)))
     , controller_(controller)
     , shutdown_(false)
@@ -79,6 +80,7 @@ WebSocketConnection<WebSocketSecureSession<> >::WebSocketConnection(
           ctx,
           std::bind(
               &WebSocketConnection::DataReceive, this, std::placeholders::_1),
+          [this](protocol_handler::RawMessagePtr frame) { OnDataSent(frame); },
           std::bind(&WebSocketConnection::OnError, this)))
     , controller_(controller)
     , shutdown_(false)
@@ -138,6 +140,12 @@ template <typename Session>
 void WebSocketConnection<Session>::DataReceive(
     protocol_handler::RawMessagePtr frame) {
   controller_->DataReceiveDone(device_uid_, app_handle_, frame);
+}
+
+template <typename Session>
+void WebSocketConnection<Session>::OnDataSent(
+    protocol_handler::RawMessagePtr frame) {
+  controller_->DataSendDone(device_uid_, app_handle_, frame);
 }
 
 template <typename Session>
