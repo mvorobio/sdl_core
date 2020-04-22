@@ -165,7 +165,7 @@ TEST_F(SetInteriorVehicleDataRequestTest,
       (*mobile_message)[application_manager::strings::msg_params];
   msg_params[kModuleData][kModuleType] = mobile_apis::ModuleType::CLIMATE;
   auto& control_data = msg_params[kModuleData][kClimateControlData];
-  const uint64_t fan_speed = 10;
+  const uint64_t fan_speed = 10u;
   control_data[kFanSpeed] = fan_speed;
 
   // Expectations
@@ -183,7 +183,7 @@ TEST_F(SetInteriorVehicleDataRequestTest,
   command->Run();
 
   EXPECT_TRUE(control_data.keyExists(kFanSpeed) &&
-              fan_speed == control_data[kFanSpeed].asUInt());
+              control_data[kFanSpeed].asUInt() == fan_speed);
 }
 
 TEST_F(
@@ -198,7 +198,7 @@ TEST_F(
   msg_params[kModuleData][kModuleType] = mobile_apis::ModuleType::RADIO;
   auto& control_data = msg_params[kModuleData][kRadioControlData];
   control_data[kState] = true;
-  const auto radio_enable = true;
+  const bool radio_enable = true;
   control_data[kRadioEnable] = radio_enable;
 
   ON_CALL(mock_rc_capabilities_manager_, ControlDataForType(_, _))
@@ -223,7 +223,7 @@ TEST_F(
 
   EXPECT_FALSE(control_data.keyExists(kState));
   EXPECT_TRUE(control_data.keyExists(kRadioEnable) &&
-              radio_enable == control_data[kRadioEnable].asBool());
+              control_data[kRadioEnable].asBool() == radio_enable);
 }
 
 TEST_F(
